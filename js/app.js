@@ -30,10 +30,13 @@ var ViewModel = function(){
 	
 	var self = this;
 	this.markers = [];
+	this.listView = ko.observableArray([]);
 	locations.forEach(function(data){
 		self.markers.push(new initMarkers(data));
 	});
-	
+	locations.forEach(function(data){
+		self.listView.push(new initMarkers(data));
+	});
     
 }
 
