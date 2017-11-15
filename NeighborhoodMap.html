@@ -52,7 +52,7 @@
     <div class="container">
     	<div class="sidebar">
     		<input id="filter-results-text" class="text" type="text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
-    		<input id="filter-results" type="button" value="Go">
+    		<input data-bind="click: textSearchPlaces" id="filter-results" type="button" value="Go">
     		<div class="list-results">
     			<ul data-bind="foreach: listView">
     				<li> 

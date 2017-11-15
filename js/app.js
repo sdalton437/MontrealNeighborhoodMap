@@ -34,11 +34,39 @@ var ViewModel = function(){
 	locations.forEach(function(data){
 		self.markers.push(new initMarkers(data));
 	});
+
 	locations.forEach(function(data){
 		self.listView.push(new initMarkers(data));
 	});
+
+	
+	this.textSearchPlaces = function(){
+		var query = document.getElementById('filter-results-text').value.toLowerCase();
+				//console.log(self.listView().length);
+		var toDelete = [];
+		var counter = 0;
+		//console.log(self.listView()[2].title.toLowerCase().includes(query));
+		//console.log(self.markers.length);
+		for(var i=0; i<self.listView().length; i++){
+			console.log(self.listView()[i].title);
+			
+			if(self.listView()[i].title.toLowerCase().search(query) == -1){
+				toDelete.push(i);
+			}
+			//console.log(!self.markers[i].title.includes(query));
+			//console.log(self.markers[i]);
+		}
+		while(toDelete.length){
+			self.listView.splice(toDelete.pop(),1);
+		}
+		//console.log(query);
+	}	
+	
+	
+
     
 }
+
 
 function initMap(){
 	map = new google.maps.Map(document.getElementById('map'), {
