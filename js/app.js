@@ -41,6 +41,10 @@ var ViewModel = function(){
 
 	
 	this.textSearchPlaces = function(){
+		self.listView.removeAll();
+		locations.forEach(function(data){
+			self.listView.push(new initMarkers(data));
+		});
 		var query = document.getElementById('filter-results-text').value.toLowerCase();
 				//console.log(self.listView().length);
 		var toDelete = [];
@@ -60,11 +64,8 @@ var ViewModel = function(){
 			self.listView.splice(toDelete.pop(),1);
 		}
 		//console.log(query);
-	}	
-	
-	
-
-    
+	}
+ 
 }
 
 
