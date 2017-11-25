@@ -1,6 +1,5 @@
 var map;
 var placeMarkers = [];
-var markers = [];
 var largeInfowindow;
 
 
@@ -47,35 +46,26 @@ var ViewModel = function(){
 	locations.forEach(function(data){
 		self.listView.push(data);
 	});
-	
+
 	console.log(self.listView()[0]);
 	this.textSearchPlaces = function(){
+		for(var x = 0;x<self.markers.length;x++){
+			self.markers[x].marker.setMap(null);
+		};
+
+		self.listView.removeAll();
+
 		var query = document.getElementById('filter-results-text').value.toLowerCase();
 		console.log(self.listView().length);
-		var toDelete = [];
 		var counter = 0;
-		console.log(markers[0]);
-		//console.log(self.listView()[2].title.toLowerCase().includes(query));
-		//console.log(self.markers.length);
-		for(var i=0; i<self.listView().length; i++){
-			console.log(self.listView()[i].title);
-			
-			if(self.listView()[i].title.toLowerCase().search(query) == -1){
-				toDelete.push(i);
-				for(var j=0;j<self.markers.length;j++){
-					if(self.listView()[i].title == self.markers[j].title){
-						self.markers[j].marker.setMap(null);
-					}
-				}
+		
+		for(var i=0; i<locations.length; i++){
+			var index = locations[i].title.toLowerCase().search(query);
+			if(index != -1){
+				self.listView.push(locations[i]);
+				self.markers[i].marker.setMap(map);
 			}
-			//console.log(!self.markers[i].title.includes(query));
-			//console.log(self.markers[i]);
 		}
-		while(toDelete.length){
-			self.listView.splice(toDelete.pop(),1);
-		}
-		console.log(self.listView().length);
-		//console.log(query);
 	}		
  
 }
