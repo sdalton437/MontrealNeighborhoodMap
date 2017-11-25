@@ -67,16 +67,7 @@ var ViewModel = function(){
 			}
 		}
 	}
-	this.getPlaceDetails = function(){
-		var foursquare_client_id = "3TUHGAUUEZ4U2JDJ24CTJZ42JMQ4QOMD1MR2CAGKJ50ALLBD";
-		var foursquare_client_secret = "REBANX5C3T3EGVESNDDO5TWX21DKPRIUVUDMBWBXJAQC0QUT";
-		var clientParameters = "client_id=" + foursquare_client_id + "&client_secret=" + foursquare_client_secret;
-		var latitude = locations[0].location[0];
-		var longitude = locations[0].location[1];
-		var searchUrl = "https://api.foursquare.com/v2/venues/search?" + clientParameters + "&v=20130815&ll=" + latitude + "," + longitude;
-		console.log(searchUrl);
-	}		
- 
+	
 }
 
 
@@ -85,17 +76,72 @@ var ViewModel = function(){
 var populateInfoWindow = function(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
-      // Clear the infowindow content to give the streetview time to load.
-      infowindow.setContent('');
-      infowindow.marker = marker;
-      // Make sure the marker property is cleared if the infowindow is closed.
-      infowindow.addListener('closeclick', function() {
-        infowindow.marker = null;
-      });
-      
-      // Open the infowindow on the correct marker.
-      infowindow.open(map, marker);
-    }
+      	// Clear the infowindow content to give the streetview time to load.
+      	infowindow.setContent('');
+      	infowindow.marker = marker;
+      	// Make sure the marker property is cleared if the infowindow is closed.
+      	infowindow.addListener('closeclick', function() {
+        	infowindow.marker = null;
+      	});
+      	var foursquare_client_id = "3TUHGAUUEZ4U2JDJ24CTJZ42JMQ4QOMD1MR2CAGKJ50ALLBD";
+		var foursquare_client_secret = "REBANX5C3T3EGVESNDDO5TWX21DKPRIUVUDMBWBXJAQC0QUT";
+		var clientParameters = "client_id=" + foursquare_client_id + "&client_secret=" + foursquare_client_secret;
+		for(var i=0;i<locations.length;i++){
+			var locationToGenerate;
+			if(marker.title == locations[i].title){
+				locationToGenerate = locations[i];
+			}
+		}
+			var latitude = locationToGenerate.location.lat;
+			var longitude = locationToGenerate.location.lng;
+			var nameSpaces = locationToGenerate.title;
+			var name = nameSpaces.split(' ').join('_');
+			var searchUrl = "https://api.foursquare.com/v2/venues/search?" + clientParameters + "&v=20130815&ll=" + latitude + "," + longitude + "&query=" + name;
+			var venueId;
+			$.ajax({
+				url: searchUrl,
+				dataType: "json",
+				success: function(data){
+					var venue = data.response.venues;
+					var venueName = venue[0].name;
+					venueId = venue[0].id;
+					var infoUrl = "https://api.foursquare.com/v2/venues/" + venueId + "?" + clientParameters + "&v=20130815";
+					$.ajax({
+						url: infoUrl,
+						dataType : "json",
+						success: function(data){
+							var innerHTML = "<div>"
+							var info = data.response.venue;
+							var name = info.name;
+							var daysOpen = info.hours.timeframes[0].days;
+							var hours = info.hours.timeframes[0].open[0].renderedTime;
+							var review = info.tips.groups[0].items[0].text;
+							if(name){
+								innerHTML += "<strong>" + name + "</strong";
+							}
+							/*if(daysOpen){
+								innerHTML += "<br><br> Open: " + daysOpen;
+							}
+							if(hours){
+								innerHTML += ", " + hours;
+							}
+							if(review){
+								innerHTML += "<br> Reviews: " + review;
+							}
+							*/
+							innerHTML += '</div>';
+							infowindow.setContent(innerHTML);
+							console.log(name);
+						}
+					});
+				},
+				error: function(){
+					var venueName = "No name";
+					console.log(venueName);
+				}
+			});
+		infowindow.open(map, marker);
+	}
 }
 	
 
@@ -107,48 +153,5 @@ function initMap(){
     });
     largeInfowindow = new google.maps.InfoWindow();
 	ko.applyBindings(new ViewModel());
-	var foursquare_client_id = "3TUHGAUUEZ4U2JDJ24CTJZ42JMQ4QOMD1MR2CAGKJ50ALLBD";
-	var foursquare_client_secret = "REBANX5C3T3EGVESNDDO5TWX21DKPRIUVUDMBWBXJAQC0QUT";
-	var clientParameters = "client_id=" + foursquare_client_id + "&client_secret=" + foursquare_client_secret;
-	var latitude = locations[0].location.lat;
-	var longitude = locations[0].location.lng;
-	var nameSpaces = locations[0].title;
-	var name = nameSpaces.split(' ').join('_');
-	var searchUrl = "https://api.foursquare.com/v2/venues/search?" + clientParameters + "&v=20130815&ll=" + latitude + "," + longitude + "&query=" + name;
-	var venueId;
-	$.ajax({
-		url: searchUrl,
-		dataType: "json",
-		success: function(data){
-			var venue = data.response.venues;
-			var venueName = venue[0].name;
-			venueId = venue[0].id;
-			console.log(venueName);
-			console.log(venueId);
-			var infoUrl = "https://api.foursquare.com/v2/venues/" + venueId + "?" + clientParameters + "&v=20130815";
-			$.ajax({
-				url: infoUrl,
-				dataType : "json",
-				success: function(data){
-					var info = data.response.venue;
-					var name = info.name;
-					var daysOpen = info.hours.timeframes[0].days;
-					var hours = info.hours.timeframes[0].open[0].renderedTime;
-					var review = info.tips.groups[0].items[0].text;
-
-					console.log(name);
-					console.log(daysOpen);
-					console.log(hours);
-					console.log(review);
-				}
-			});
-			console.log(infoUrl);
-		},
-		error: function(){
-			var venueName = "No name";
-			console.log(venueName);
-		}
-	});
-	
 	
 }
