@@ -1,6 +1,8 @@
 var map;
 var placeMarkers = [];
 var markers = [];
+var largeInfowindow;
+
 
 var locations = [
   {title: 'Bar Darling', location: {lat: 45.518842, lng: -73.584071}},
@@ -22,6 +24,10 @@ var initMarkers = function(data){
 	  animation: google.maps.Animation.DROP,
 	  map: map
 	});
+
+	this.marker.addListener('click', function() {
+        populateInfoWindow(this, largeInfowindow);
+    });
 }
 
 
@@ -30,25 +36,25 @@ var ViewModel = function(){
 	
 	var self = this;
 	this.markers = [];
-	this.listView = ko.observableArray([]);
+	this.listView = ko.observableArray();
+
+	//Populate markers array
 	locations.forEach(function(data){
 		self.markers.push(new initMarkers(data));
 	});
-
+	console.log(self.markers[0]);
+	//Populate list view array
 	locations.forEach(function(data){
-		self.listView.push(new initMarkers(data));
+		self.listView.push(data);
 	});
-
 	
+	console.log(self.listView()[0]);
 	this.textSearchPlaces = function(){
-		self.listView.removeAll();
-		locations.forEach(function(data){
-			self.listView.push(new initMarkers(data));
-		});
 		var query = document.getElementById('filter-results-text').value.toLowerCase();
-				//console.log(self.listView().length);
+		console.log(self.listView().length);
 		var toDelete = [];
 		var counter = 0;
+		console.log(markers[0]);
 		//console.log(self.listView()[2].title.toLowerCase().includes(query));
 		//console.log(self.markers.length);
 		for(var i=0; i<self.listView().length; i++){
@@ -56,6 +62,11 @@ var ViewModel = function(){
 			
 			if(self.listView()[i].title.toLowerCase().search(query) == -1){
 				toDelete.push(i);
+				for(var j=0;j<self.markers.length;j++){
+					if(self.listView()[i].title == self.markers[j].title){
+						self.markers[j].marker.setMap(null);
+					}
+				}
 			}
 			//console.log(!self.markers[i].title.includes(query));
 			//console.log(self.markers[i]);
@@ -63,11 +74,31 @@ var ViewModel = function(){
 		while(toDelete.length){
 			self.listView.splice(toDelete.pop(),1);
 		}
+		console.log(self.listView().length);
 		//console.log(query);
-	}
+	}		
  
 }
 
+
+
+
+var populateInfoWindow = function(marker, infowindow) {
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infowindow.marker != marker) {
+      // Clear the infowindow content to give the streetview time to load.
+      infowindow.setContent('');
+      infowindow.marker = marker;
+      // Make sure the marker property is cleared if the infowindow is closed.
+      infowindow.addListener('closeclick', function() {
+        infowindow.marker = null;
+      });
+      
+      // Open the infowindow on the correct marker.
+      infowindow.open(map, marker);
+    }
+}
+	
 
 function initMap(){
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -75,5 +106,7 @@ function initMap(){
       zoom: 14,
       mapTypeControl: false
     });
+    largeInfowindow = new google.maps.InfoWindow();
 	ko.applyBindings(new ViewModel());
+	
 }
