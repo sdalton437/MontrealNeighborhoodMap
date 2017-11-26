@@ -23,38 +23,88 @@
       #map {
         bottom:0px;
         height: 100%;
-        left: 300px;
+        left: 303px;
         position: absolute;
         right: 0px;
       }
     
       .sidebar{
-        background: #fff;
+        background: #f6f6f6;
         border: 1px solid #999;
         border-radius: 3px;
         height: 100%;
         line-height: 35px;
-        padding: 10px 10px 30px 10px;
         text-align: left;
-        width: 340px;
+        width: 300px;
       }
+
       .text{
       	font-size: 12;
+        width: 70%;
+        margin-left: 10px;
+        height:25px;
+      }
+      .center{
+        margin:auto;
+      }
+      #listItem{
+        border: 1px solid #ddd;
+        margin-top: -1px; /* Prevent double borders */
+        background-color: #f6f6f6;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 12px;
+        color: black;
+        display: block;
       }
 
       #listItem:hover {
-    	background: yellow;
+    	 cursor: pointer;
+       background-color: #eee;
   	  }
+      #filter-results{
+        width: 20%;
+        height:30px;
+      }
+      #filter-results:hover {
+       cursor: pointer;
+      }
+      #list{
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+      .search-bar{
+        margin-top: 10px;
+        margin-bottom: 15px;
+      }
+      .title{
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        padding-left: 30px;
+        border: 1px solid #999;
+        border-radius: 3px;
+      }
+
+      .search-bar{
+
+      }
 
     </style>
   </head>
   <body>
     <div class="container">
     	<div class="sidebar">
-    		<input id="filter-results-text" class="text" type="text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
-    		<input data-bind="click: textSearchPlaces" id="filter-results" type="button" value="Go">
+        <div class="title"> 
+          Great Destinations in Montreal
+        </div>
+        <div class=search-bar>
+      		<input id="filter-results-text" class="text" type="text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
+      		<input data-bind="click: textSearchPlaces" id="filter-results" type="button" value="Filter">
+        </div>
     		<div class="list-results">
-    			<ul data-bind="foreach: listView">
+    			<ul id="list" data-bind="foreach: listView">
     				<li> 
     					<span data-bind="text: title, click: $parent.listViewPopulate" id="listItem"></span>
     				</li>

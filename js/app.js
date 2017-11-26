@@ -89,6 +89,7 @@ var populateInfoWindow = function(marker, infowindow) {
     if (infowindow.marker != marker) {
     	console.log(marker);
     	marker.setAnimation(google.maps.Animation.BOUNCE);
+    	infowindow.setOptions({maxWidth:250});
       	// Clear the infowindow content to give the streetview time to load.
       	infowindow.setContent('');
       	infowindow.marker = marker;
@@ -160,7 +161,7 @@ var populateInfoWindow = function(marker, infowindow) {
 								var photo = "";
 							}
 
-							innerHTML += "<strong>" + name + "</strong";
+							innerHTML += "<strong>" + name + "</strong>";
 							innerHTML += "<br><br> <img src=" + photo + ">";
 							innerHTML += "<br>Open: " + daysOpen;
 							innerHTML += ", " + hours;
