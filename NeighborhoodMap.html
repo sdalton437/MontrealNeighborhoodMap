@@ -26,6 +26,7 @@
         left: 303px;
         position: absolute;
         right: 0px;
+        z-index: -1;
       }
     
       .sidebar{
@@ -87,8 +88,23 @@
         border-radius: 3px;
       }
 
-      .search-bar{
-
+      .menu-bar{
+        top:0;
+        height: 40px;
+        left: 303px;
+        position: absolute;
+        right: 0px;
+        background: #f6f6f6;
+      }
+      .menu-line{
+        width: 25px;
+        height: 2px;
+        background-color: black;
+        margin: 6px 0;
+      }
+      .hamburger-icon{
+        margin-left: 10px;
+        margin-top: 10px;
       }
 
     </style>
@@ -111,7 +127,18 @@
     			</ul>
     		</div>
     	</div>
-    	<div id="map"></div>
+      <div class="menu-bar">
+          <div class="hamburger-icon" click>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+          </div>
+      </div> 
+
+      <div id="map">
+        
+      </div>
+      
     </div>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/lib/jquery.min.js"></script>
