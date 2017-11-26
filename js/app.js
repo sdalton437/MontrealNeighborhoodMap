@@ -110,25 +110,48 @@ var populateInfoWindow = function(marker, infowindow) {
 						url: infoUrl,
 						dataType : "json",
 						success: function(data){
+							console.log(infoUrl);
 							var innerHTML = "<div>"
 							var info = data.response.venue;
-							var name = info.name;
-							var daysOpen = info.hours.timeframes[0].days;
-							var hours = info.hours.timeframes[0].open[0].renderedTime;
-							var review = info.tips.groups[0].items[0].text;
-							if(name){
-								innerHTML += "<strong>" + name + "</strong";
+							try{
+								var name = info.name;
+								
 							}
-							/*if(daysOpen){
-								innerHTML += "<br><br> Open: " + daysOpen;
+							catch(err){
+								var name = "No data";
+								innerHTML += "<strong>No Name Data</strong";
 							}
-							if(hours){
-								innerHTML += ", " + hours;
+							try{
+								var daysOpen = info.hours.timeframes[0].days;	
 							}
-							if(review){
-								innerHTML += "<br> Reviews: " + review;
+							catch(err){
+								var daysOpen = "No data";
 							}
-							*/
+							try{
+								var hours = info.hours.timeframes[0].open[0].renderedTime;
+							}
+							catch(err){
+								var hours = "No data";
+							}
+							try{
+								var review = info.tips.groups[0].items[0].text;
+							}
+							catch(err){
+								var review = "No data";
+							}
+							try{
+								var photo = info.photos.groups[0].items[0].prefix + "200x200" + info.photos.groups[0].items[0].suffix;
+							}
+							catch(err){
+								var photo = "";
+							}
+
+							innerHTML += "<strong>" + name + "</strong";
+							innerHTML += "<br><br> <img src=" + photo + ">";
+							innerHTML += "<br>Open: " + daysOpen;
+							innerHTML += ", " + hours;
+							innerHTML += '<br> Reviews: "' + review + '"';
+							
 							innerHTML += '</div>';
 							infowindow.setContent(innerHTML);
 							console.log(name);
