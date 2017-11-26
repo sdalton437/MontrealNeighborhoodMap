@@ -29,7 +29,7 @@ var initMarkers = function(data){
 
 
 var ViewModel = function(){
-	
+
 	var self = this;
 	//Create empty markers array
 	this.markers = [];
@@ -77,7 +77,7 @@ var ViewModel = function(){
 			}
 		}
 	}
-	
+
 }
 
 
@@ -98,7 +98,7 @@ var populateInfoWindow = function(marker, infowindow) {
       	});
       	var foursquare_client_id = '3TUHGAUUEZ4U2JDJ24CTJZ42JMQ4QOMD1MR2CAGKJ50ALLBD';
 		var foursquare_client_secret = 'REBANX5C3T3EGVESNDDO5TWX21DKPRIUVUDMBWBXJAQC0QUT';
-		var clientParameters = 'client_id=' + foursquare_client_id + 
+		var clientParameters = 'client_id=' + foursquare_client_id +
 			'&client_secret=' + foursquare_client_secret;
 		for(var i=0;i<locations.length;i++){
 			var locationToGenerate;
@@ -112,7 +112,7 @@ var populateInfoWindow = function(marker, infowindow) {
 		var nameSpaces = locationToGenerate.title;
 		//Remove spaces in name
 		var name = nameSpaces.split(' ').join('_');
-		var searchUrl = 'https://api.foursquare.com/v2/venues/search?' + clientParameters + 
+		var searchUrl = 'https://api.foursquare.com/v2/venues/search?' + clientParameters +
 			'&v=20130815&ll=' + latitude + ',' + longitude + '&query=' + name;
 		var venueId;
 		$.ajax({
@@ -124,10 +124,10 @@ var populateInfoWindow = function(marker, infowindow) {
 				var venue = data.response.venues;
 				var venueName = venue[0].name;
 				venueId = venue[0].id;
-				var infoUrl = 'https://api.foursquare.com/v2/venues/' + venueId + 
+				var infoUrl = 'https://api.foursquare.com/v2/venues/' + venueId +
 					'?' + clientParameters + '&v=20130815';
 				$.ajax({
-					//Search foursquare for details on location with received venueID 
+					//Search foursquare for details on location with received venueID
 					url: infoUrl,
 					dataType : 'json',
 					success: function(data){
@@ -142,7 +142,7 @@ var populateInfoWindow = function(marker, infowindow) {
 						}
 						//Try to find photo
 						try{
-							var photo = info.photos.groups[0].items[0].prefix + 
+							var photo = info.photos.groups[0].items[0].prefix +
 								'250x200' + info.photos.groups[0].items[0].suffix;
 							innerHTML += '<img src=' + photo + '>';
 						}
@@ -151,7 +151,7 @@ var populateInfoWindow = function(marker, infowindow) {
 						//Try to find days and hours the venue is open
 						try{
 							for(var i=0;i<7;i++){
-								var daysOpen = info.hours.timeframes[i].days;	
+								var daysOpen = info.hours.timeframes[i].days;
 								innerHTML += '<br>Open: ' + daysOpen;
 								var hours = info.hours.timeframes[i].open[i].renderedTime;
 								innerHTML += ', ' + hours;
@@ -159,24 +159,24 @@ var populateInfoWindow = function(marker, infowindow) {
 						}
 						catch(err){
 						}
-						
+
 						//Try to find a review
 						try{
 							var review = info.tips.groups[0].items[0].text;
-							innerHTML += '<br> Reviews: ' + '<div style="font-style:italic;padding-left: 5px;">' 
+							innerHTML += '<br> Reviews: ' + '<div style="font-style:italic;padding-left: 5px;">'
 								+ '"' + review + '"</div>';
 						}
 						catch(err){
 						}
 						//Try to find user that wrote the review
 						try{
-							var user = info.tips.groups[0].items[0].user.firstName + 
+							var user = info.tips.groups[0].items[0].user.firstName +
 								' ' + info.tips.groups[0].items[0].user.lastName;
 							innerHTML += '<div style="padding-left:10px;">- ' + user + '</div>';
 						}
 						catch(err){
 						}
-						
+
 						innerHTML += '<br><div style="font-style: italic;"> Data Provided by Foursquare </div></div>';
 						infowindow.setContent(innerHTML);
 					},
@@ -195,7 +195,7 @@ var populateInfoWindow = function(marker, infowindow) {
 		infowindow.open(map, marker);
 	}
 }
-	
+
 //Function to initiate the map
 function initMap(){
 	//Create new map
@@ -207,5 +207,5 @@ function initMap(){
     //Create new infowindow
     largeInfowindow = new google.maps.InfoWindow();
 	ko.applyBindings(new ViewModel());
-	
+
 }
