@@ -26,10 +26,9 @@
         left: 303px;
         position: absolute;
         right: 0px;
-        z-index: -1;
       }
     
-      .sidebar{
+      #sidebar{
         background: #f6f6f6;
         border: 1px solid #999;
         border-radius: 3px;
@@ -65,7 +64,10 @@
   	  }
       #filter-results{
         width: 20%;
-        height:30px;
+        height:25px;
+      }
+      #filter-results-text{
+        height:20px;
       }
       #filter-results:hover {
        cursor: pointer;
@@ -88,52 +90,35 @@
         border-radius: 3px;
       }
 
-      .menu-bar{
-        top:0;
-        height: 40px;
-        left: 303px;
-        position: absolute;
-        right: 0px;
-        background: #f6f6f6;
-      }
-      .menu-line{
-        width: 25px;
-        height: 2px;
-        background-color: black;
-        margin: 6px 0;
-      }
-      .hamburger-icon{
-        margin-left: 10px;
-        margin-top: 10px;
-      }
+      
 
     </style>
   </head>
   <body>
     <div class="container">
-    	<div class="sidebar">
-        <div class="title"> 
-          Great Destinations in Montreal
-        </div>
-        <div class=search-bar>
-      		<input id="filter-results-text" class="text" type="text" placeholder="Ex: La Banquise">
-      		<input data-bind="click: textSearchPlaces" id="filter-results" type="button" value="Filter">
-        </div>
-    		<div class="list-results">
-    			<ul id="list" data-bind="foreach: listView">
-    				<li> 
-    					<span data-bind="text: title, click: $parent.listViewPopulate" id="listItem"></span>
-    				</li>
-    			</ul>
-    		</div>
-    	</div>
-      <div class="menu-bar">
-          <div class="hamburger-icon" click>
+    	<div id="sidebar">
+        <div class="menu-bar">
+          <div id="hamburger-icon" onclick="toggle_sidebar()">
             <div class="menu-line"></div>
             <div class="menu-line"></div>
             <div class="menu-line"></div>
           </div>
       </div> 
+        <div class="title"> 
+          Great Destinations in Montreal
+        </div>
+        <div class=search-bar>
+      		<input id="filter-results-text" class="text" type="text" placeholder="Ex: La Banquise">
+      		<input data-bind="click: filterPlaces" id="filter-results" type="button" value="Filter">
+        </div>
+    		<div class="list-results">
+    			<ul id="list" data-bind="foreach: listView">
+    				<li> 
+    					<span data-bind="text: title, click: $parent.listViewPopulateInfoWindow" id="listItem"></span>
+    				</li>
+    			</ul>
+    		</div>
+    	</div>
 
       <div id="map">
         
