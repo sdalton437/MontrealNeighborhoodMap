@@ -47,6 +47,17 @@ var ViewModel = function(){
 		self.listView.push(data);
 	});
 
+	this.listViewPopulate = function(data){
+		for(var j=0;j<self.markers.length;j++){
+			console.log("reacded");
+			console.log(data);
+			if(data.title == self.markers[j].title){
+				populateInfoWindow(self.markers[j].marker, largeInfowindow);
+				console.log(self.markers[j]);
+			}
+		}
+	}
+
 	console.log(self.listView()[0]);
 	this.textSearchPlaces = function(){
 		for(var x = 0;x<self.markers.length;x++){
@@ -76,12 +87,15 @@ var ViewModel = function(){
 var populateInfoWindow = function(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
+    	console.log(marker);
+    	marker.setAnimation(google.maps.Animation.BOUNCE);
       	// Clear the infowindow content to give the streetview time to load.
       	infowindow.setContent('');
       	infowindow.marker = marker;
       	// Make sure the marker property is cleared if the infowindow is closed.
       	infowindow.addListener('closeclick', function() {
         	infowindow.marker = null;
+        	marker.setAnimation(null);
       	});
       	var foursquare_client_id = "3TUHGAUUEZ4U2JDJ24CTJZ42JMQ4QOMD1MR2CAGKJ50ALLBD";
 		var foursquare_client_secret = "REBANX5C3T3EGVESNDDO5TWX21DKPRIUVUDMBWBXJAQC0QUT";

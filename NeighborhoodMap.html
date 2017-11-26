@@ -56,7 +56,7 @@
     		<div class="list-results">
     			<ul data-bind="foreach: listView">
     				<li> 
-    					<span data-bind="text: title" id="listItem"></span>
+    					<span data-bind="text: title, click: $parent.listViewPopulate" id="listItem"></span>
     				</li>
     			</ul>
     		</div>
