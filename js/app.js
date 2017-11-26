@@ -90,7 +90,9 @@ var populateInfoWindow = function(marker, infowindow) {
     	marker.setAnimation(google.maps.Animation.BOUNCE);
     	//Set max width of info window
     	infowindow.setOptions({maxWidth:250});
+    	infowindow.setContent('');
       	infowindow.marker = marker;
+
       	// Make sure the marker property  and animation is cleared if the infowindow is closed.
       	infowindow.addListener('closeclick', function() {
         	infowindow.marker = null;
