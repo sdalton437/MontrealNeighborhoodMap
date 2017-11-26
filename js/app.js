@@ -7,7 +7,7 @@ var locations = [
   {title: 'Bar Darling', location: {lat: 45.518842, lng: -73.584071}},
   {title: 'La Banquise', location: {lat: 45.5253521, lng: -73.5747681}},
   {title: 'Divan Orange', location: {lat: 45.518224, lng: -73.582543}},
-  {title: 'Bar Bikteck St-Laurent', location: {lat: 45.5145979, lng: -73.5743797}},
+  {title: 'Apt-200', location: {lat: 45.514586, lng: -73.5754871}},
   {title: 'Mckibbins Irish Pub', location: {lat: 45.5134263, lng: -73.5712162}},
   {title: 'Pitarifique', location: {lat: 45.5178508, lng: -73.5816863}}
 ];
@@ -112,6 +112,7 @@ var populateInfoWindow = function(marker, infowindow) {
 			var nameSpaces = locationToGenerate.title;
 			var name = nameSpaces.split(' ').join('_');
 			var searchUrl = "https://api.foursquare.com/v2/venues/search?" + clientParameters + "&v=20130815&ll=" + latitude + "," + longitude + "&query=" + name;
+			console.log(searchUrl);
 			var venueId;
 			$.ajax({
 				url: searchUrl,
@@ -130,52 +131,60 @@ var populateInfoWindow = function(marker, infowindow) {
 							var info = data.response.venue;
 							try{
 								var name = info.name;
-								
+								innerHTML += '<h2 style="text-align:center;">' + name + "</h2>";
 							}
 							catch(err){
-								var name = "No data";
-								innerHTML += "<strong>No Name Data</strong";
+								var name = "?";
 							}
 							try{
-								var daysOpen = info.hours.timeframes[0].days;	
-							}
-							catch(err){
-								var daysOpen = "No data";
-							}
-							try{
-								var hours = info.hours.timeframes[0].open[0].renderedTime;
-							}
-							catch(err){
-								var hours = "No data";
-							}
-							try{
-								var review = info.tips.groups[0].items[0].text;
-							}
-							catch(err){
-								var review = "No data";
-							}
-							try{
-								var photo = info.photos.groups[0].items[0].prefix + "200x200" + info.photos.groups[0].items[0].suffix;
+								var photo = info.photos.groups[0].items[0].prefix + "250x200" + info.photos.groups[0].items[0].suffix;
+								innerHTML += "<img src=" + photo + ">";
 							}
 							catch(err){
 								var photo = "";
 							}
-
-							innerHTML += "<strong>" + name + "</strong>";
-							innerHTML += "<br><br> <img src=" + photo + ">";
-							innerHTML += "<br>Open: " + daysOpen;
-							innerHTML += ", " + hours;
-							innerHTML += '<br> Reviews: "' + review + '"';
+							try{
+								var daysOpen = info.hours.timeframes[0].days;	
+								innerHTML += "<br>Open: " + daysOpen;
+							}
+							catch(err){
+								var daysOpen = "";
+							}
+							try{
+								var hours = info.hours.timeframes[0].open[0].renderedTime;
+								innerHTML += ", " + hours;
+							}
+							catch(err){
+								var hours = "";
+								
+							}
+							try{
+								var review = info.tips.groups[0].items[0].text;
+								innerHTML += '<br> Reviews: ' + '<div style="font-style:italic;padding-left: 5px;">' + '"' + review + '"</div>';
+							}
+							catch(err){
+								var review = "";
+							}
+							
+							try{
+								var user = info.tips.groups[0].items[0].user.firstName + " " + info.tips.groups[0].items[0].user.lastName;
+								innerHTML += '<div style="padding-left:10px;">- ' + user + "</div>";
+							}
+							catch(err){
+								var user = "";
+							}
 							
 							innerHTML += '</div>';
 							infowindow.setContent(innerHTML);
 							console.log(name);
+						},
+						error: function(){
+							alert("Foursquare API could not be loaded");
 						}
 					});
 				},
 				error: function(){
-					var venueName = "No name";
-					console.log(venueName);
+					alert("Foursquare API could not be loaded");
 				}
 			});
 		infowindow.open(map, marker);
