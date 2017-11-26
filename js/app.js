@@ -24,7 +24,7 @@ var initMarkers = function(data){
 	this.marker.addListener('click', function() {
         populateInfoWindow(this, largeInfowindow);
     });
-}
+};
 
 
 
@@ -53,14 +53,14 @@ var ViewModel = function(){
 				populateInfoWindow(self.markers[j].marker, largeInfowindow);
 			}
 		}
-	}
+	};
 
 	//Function that filters locations
 	this.filterPlaces = function(){
 		//Set all markers' map to null
 		for(var x = 0;x<self.markers.length;x++){
 			self.markers[x].marker.setMap(null);
-		};
+		}
 
 		//Remove all items from listView array
 		self.listView.removeAll();
@@ -76,9 +76,9 @@ var ViewModel = function(){
 				self.markers[i].marker.setMap(map);
 			}
 		}
-	}
+	};
 
-}
+};
 
 
 
@@ -100,8 +100,8 @@ var populateInfoWindow = function(marker, infowindow) {
 		var foursquare_client_secret = 'REBANX5C3T3EGVESNDDO5TWX21DKPRIUVUDMBWBXJAQC0QUT';
 		var clientParameters = 'client_id=' + foursquare_client_id +
 			'&client_secret=' + foursquare_client_secret;
+		var locationToGenerate;
 		for(var i=0;i<locations.length;i++){
-			var locationToGenerate;
 			//Get location details to generate
 			if(marker.title == locations[i].title){
 				locationToGenerate = locations[i];
@@ -116,13 +116,12 @@ var populateInfoWindow = function(marker, infowindow) {
 			'&v=20130815&ll=' + latitude + ',' + longitude + '&query=' + name;
 		var venueId;
 		$.ajax({
-			//Search Foursquare for venues with specified name and lat,lng
+			//Search Foursquare for venues with specified lat,lng
 			url: searchUrl,
 			dataType: 'json',
 			//If success, search fouursquare for details on location
 			success: function(data){
 				var venue = data.response.venues;
-				var venueName = venue[0].name;
 				venueId = venue[0].id;
 				var infoUrl = 'https://api.foursquare.com/v2/venues/' + venueId +
 					'?' + clientParameters + '&v=20130815';
@@ -131,7 +130,7 @@ var populateInfoWindow = function(marker, infowindow) {
 					url: infoUrl,
 					dataType : 'json',
 					success: function(data){
-						var innerHTML = "<div>"
+						var innerHTML = "<div>";
 						var info = data.response.venue;
 						//Try to find name
 						try{
@@ -163,8 +162,8 @@ var populateInfoWindow = function(marker, infowindow) {
 						//Try to find a review
 						try{
 							var review = info.tips.groups[0].items[0].text;
-							innerHTML += '<br> Reviews: ' + '<div style="font-style:italic;padding-left: 5px;">'
-								+ '"' + review + '"</div>';
+							innerHTML += '<br> Reviews: ' + '<div style="font-style:italic;padding-left: 5px;">' +
+								'"' + review + '"</div>';
 						}
 						catch(err){
 						}
@@ -194,7 +193,7 @@ var populateInfoWindow = function(marker, infowindow) {
 		//Open the window on the marker
 		infowindow.open(map, marker);
 	}
-}
+};
 
 //Function to initiate the map
 function initMap(){
