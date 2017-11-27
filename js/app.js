@@ -20,10 +20,6 @@ var initMarkers = function(data){
 	  animation: google.maps.Animation.DROP,
 	  map: map
 	});
-
-	this.marker.addListener('click', function() {
-        populateInfoWindow(this, largeInfowindow);
-    });
 };
 
 
@@ -39,18 +35,23 @@ var ViewModel = function(){
 	//Populate markers array
 	locations.forEach(function(data){
 		self.markers.push(new initMarkers(data));
+
 	});
+	for(var i=0; i<self.markers.length;i++){
+		self.markers[i].marker.addListener('click', function() {
+        	populateInfoWindow(this, largeInfowindow, self.markers);
+        });
+	}
 
 	//Populate list view array
 	locations.forEach(function(data){
 		self.listView.push(data);
 	});
-
 	//Function that populates infowindow when listview item is clicked
 	this.listViewPopulateInfoWindow = function(data){
 		for(var j=0;j<self.markers.length;j++){
 			if(data.title == self.markers[j].title){
-				populateInfoWindow(self.markers[j].marker, largeInfowindow);
+				populateInfoWindow(self.markers[j].marker, largeInfowindow, self.markers);
 			}
 		}
 	};
@@ -83,10 +84,13 @@ var ViewModel = function(){
 
 
 
-var populateInfoWindow = function(marker, infowindow) {
+var populateInfoWindow = function(marker, infowindow, markers) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
-    	//Set animation to bounce to alert user marker is selected
+    	//Set all marker animations to null, then set marker animation to bounce to alert user marker is selected
+    	for(var c=0;c<markers.length;c++){
+    		markers[c].marker.setAnimation(null);
+    	}
     	marker.setAnimation(google.maps.Animation.BOUNCE);
     	//Set max width of info window
     	infowindow.setOptions({maxWidth:250});
