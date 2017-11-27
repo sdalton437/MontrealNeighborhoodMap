@@ -37,11 +37,16 @@ var ViewModel = function(){
 		self.markers.push(new initMarkers(data));
 
 	});
-	for(var i=0; i<self.markers.length;i++){
-		self.markers[i].marker.addListener('click', function() {
-        	populateInfoWindow(this, largeInfowindow, self.markers);
+
+	function addListeners(markerToListen){
+		markerToListen.addListener('click', function() {
+        		populateInfoWindow(this, largeInfowindow, self.markers);
         });
 	}
+
+	for(var i=0; i<self.markers.length;i++){
+		addListeners(self.markers[i].marker);
+    }
 
 	//Populate list view array
 	locations.forEach(function(data){
