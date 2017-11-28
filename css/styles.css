@@ -19,7 +19,7 @@ input {
 #map {
   bottom:0px;
   height: 100%;
-  left: 303px;
+  width:70%;
   position: absolute;
   right: 0px;
 }
@@ -31,12 +31,12 @@ input {
   height: 100%;
   line-height: 35px;
   text-align: left;
-  width: 300px;
+  width: 29.75%;
 }
 
 .text{
 	font-size: 12;
-  width: 70%;
+  max-width: 69%;
   margin-left: 10px;
   height:25px;
 }
@@ -59,7 +59,8 @@ input {
  background-color: #eee;
 }
 #filter-results{
-  width: 20%;
+  margin-left: 10px;
+  width: 60px;
   height:25px;
 }
 #filter-results-text{
@@ -79,9 +80,7 @@ input {
 }
 .title{
   margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding-left: 30px;
+  text-align: center;
   border: 1px solid #999;
   border-radius: 3px;
 }

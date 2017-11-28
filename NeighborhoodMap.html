@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <head>
     <link rel=stylesheet type=text/css href="css/styles.css">
   </head>
   <body>
     <div class="container">
     	<div id="sidebar">
-        <div class="menu-bar">
-          <div id="hamburger-icon" onclick="toggle_sidebar()">
-            <div class="menu-line"></div>
-            <div class="menu-line"></div>
-            <div class="menu-line"></div>
-          </div>
-      </div>
         <div class="title">
           Great Destinations in Montreal
         </div>
@@ -34,11 +29,12 @@
       </div>
 
     </div>
-    <script src="js/lib/knockout-3.2.0.js"></script>
-    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/knockout-3.2.0.js" onerror="error()"></script>
+    <script src="js/lib/jquery.min.js" onerror="error()"></script>
     <script src="js/app.js"></script>
-  	<script async defer
-        src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCSE45Z4VEPHHlt-UTwB7UQyLl0yg6nHuo&v=3&callback=initMap">
+  	<script defer
+      src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCSE45Z4VEPHHlt-UTwB7UQyLl0yg6nHuo&v=3&callback=initMap"
+      onerror="error()">
     </script>
   </body>
 </html>

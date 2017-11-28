@@ -129,80 +129,82 @@ var populateInfoWindow = function(marker, infowindow, markers) {
 		$.ajax({
 			//Search Foursquare for venues with specified lat,lng
 			url: searchUrl,
-			dataType: 'json',
+			dataType: 'json'
+		})
 			//If success, search fouursquare for details on location
-			success: function(data){
-				var venue = data.response.venues;
-				venueId = venue[0].id;
-				var infoUrl = 'https://api.foursquare.com/v2/venues/' + venueId +
-					'?' + clientParameters + '&v=20130815';
-				$.ajax({
-					//Search foursquare for details on location with received venueID
-					url: infoUrl,
-					dataType : 'json',
-					success: function(data){
-						var innerHTML = "<div>";
-						var info = data.response.venue;
-						//Try to find name
-						try{
-							var name = info.name;
-							innerHTML += '<h2 style="text-align:center;">' + name + '</h2>';
-						}
-						catch(err){
-						}
-						//Try to find photo
-						try{
-							var photo = info.photos.groups[0].items[0].prefix +
-								'250x200' + info.photos.groups[0].items[0].suffix;
-							innerHTML += '<img src=' + photo + '>';
-						}
-						catch(err){
-						}
-						//Try to find days and hours the venue is open
-						try{
-							for(var i=0;i<7;i++){
-								var daysOpen = info.hours.timeframes[i].days;
-								innerHTML += '<br>Open: ' + daysOpen;
-								var hours = info.hours.timeframes[i].open[i].renderedTime;
-								innerHTML += ', ' + hours;
-							}
-						}
-						catch(err){
-						}
-
-						//Try to find a review
-						try{
-							var review = info.tips.groups[0].items[0].text;
-							innerHTML += '<br> Reviews: ' + '<div style="font-style:italic;padding-left: 5px;">' +
-								'"' + review + '"</div>';
-						}
-						catch(err){
-						}
-						//Try to find user that wrote the review
-						try{
-							var user = info.tips.groups[0].items[0].user.firstName +
-								' ' + info.tips.groups[0].items[0].user.lastName;
-							innerHTML += '<div style="padding-left:10px;">- ' + user + '</div>';
-						}
-						catch(err){
-						}
-
-						innerHTML += '<br><div style="font-style: italic;"> Data Provided by Foursquare </div></div>';
-						infowindow.setContent(innerHTML);
-					},
-					//If error, alert user
-					error: function(){
-						alert('Foursquare API could not be loaded');
+		.done(function(data){
+			var venue = data.response.venues;
+			venueId = venue[0].id;
+			var infoUrl = 'https://api.foursquare.com/v2/venues/' + venueId +
+				'?' + clientParameters + '&v=20130815';
+			$.ajax({
+				//Search foursquare for details on location with received venueID
+				url: infoUrl,
+				dataType : 'json'
+			})
+			.done(function(data){
+				var innerHTML = "<div>";
+				var info = data.response.venue;
+				//Try to find name
+				try{
+					var name = info.name;
+					innerHTML += '<h2 style="text-align:center;">' + name + '</h2>';
+				}
+				catch(err){
+				}
+				//Try to find photo
+				try{
+					var photo = info.photos.groups[0].items[0].prefix +
+						'250x200' + info.photos.groups[0].items[0].suffix;
+					innerHTML += '<img src=' + photo + '>';
+				}
+				catch(err){
+				}
+				//Try to find days and hours the venue is open
+				try{
+					for(var i=0;i<7;i++){
+						var daysOpen = info.hours.timeframes[i].days;
+						innerHTML += '<br>Open: ' + daysOpen;
+						var hours = info.hours.timeframes[i].open[i].renderedTime;
+						innerHTML += ', ' + hours;
 					}
-				});
-			},
+				}
+				catch(err){
+				}
+
+				//Try to find a review
+				try{
+					var review = info.tips.groups[0].items[0].text;
+					innerHTML += '<br> Reviews: ' + '<div style="font-style:italic;padding-left: 5px;">' +
+						'"' + review + '"</div>';
+				}
+				catch(err){
+				}
+				//Try to find user that wrote the review
+				try{
+					var user = info.tips.groups[0].items[0].user.firstName +
+						' ' + info.tips.groups[0].items[0].user.lastName;
+					innerHTML += '<div style="padding-left:10px;">- ' + user + '</div>';
+				}
+				catch(err){
+				}
+
+				innerHTML += '<br><div style="font-style: italic;"> Data Provided by Foursquare </div></div>';
+				infowindow.setContent(innerHTML);
+			})
 			//If error, alert user
-			error: function(){
+			.fail(function(){
 				alert('Foursquare API could not be loaded');
-			}
-		});
+			})
+		})
+			//If error, alert user
+		.fail(function(){
+			alert('Foursquare API could not be loaded');
+		})
 		//Open the window on the marker
-		infowindow.open(map, marker);
+		.always(function(){
+			infowindow.open(map, marker)
+		});
 	}
 };
 
@@ -218,4 +220,9 @@ function initMap(){
     largeInfowindow = new google.maps.InfoWindow();
 	ko.applyBindings(new ViewModel());
 
+}
+
+//Function initiated on error loading Google Maps API
+function error(){
+	alert("Google maps API could not be loaded, please check your internet connection, make sure you are not blocking the API and try again");
 }
