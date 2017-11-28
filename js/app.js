@@ -29,13 +29,18 @@ var ViewModel = function(){
 	var self = this;
 	//Create empty markers array
 	this.markers = [];
+
 	//Create listView ko observable array
-	this.listView = ko.observableArray();
+	this.items = ko.observableArray();
+
+	//Populate list view array
+	locations.forEach(function(data){
+		self.items.push(data);
+	});
 
 	//Populate markers array
 	locations.forEach(function(data){
 		self.markers.push(new initMarkers(data));
-
 	});
 
 	function addListeners(markerToListen){
@@ -44,14 +49,11 @@ var ViewModel = function(){
         });
 	}
 
-	for(var i=0; i<self.markers.length;i++){
-		addListeners(self.markers[i].marker);
-    }
+	self.markers.forEach(function(markers){
+		addListeners(markers.marker);
+    });
 
-	//Populate list view array
-	locations.forEach(function(data){
-		self.listView.push(data);
-	});
+
 	//Function that populates infowindow when listview item is clicked
 	this.listViewPopulateInfoWindow = function(data){
 		for(var j=0;j<self.markers.length;j++){
@@ -61,28 +63,41 @@ var ViewModel = function(){
 		}
 	};
 
-	//Function that filters locations
-	this.filterPlaces = function(){
-		//Set all markers' map to null
-		for(var x = 0;x<self.markers.length;x++){
-			self.markers[x].marker.setMap(null);
-		}
+	this.filter = ko.observable('');
 
-		//Remove all items from listView array
-		self.listView.removeAll();
-		//Get user query in lower case
-		var query = document.getElementById('filter-results-text').value.toLowerCase();
+	this.listView = ko.computed(function() {
+    	var filter = self.filter().toLowerCase();
+    	var stringStartsWith = function (string, startsWith) {
+   			string = string || "";
+    		if (startsWith.length > string.length){
+        		return false;
+    		}
+    		return string.substring(0, startsWith.length) === startsWith;
+		};
+		//If no filter, set all markers to map and return all items
+    	if (!filter) {
+    		self.markers.forEach(function(markerToSet){
+    			markerToSet.marker.setMap(map);
+    		});
+        	return self.items();
+    	}
 
-		//Search through locations array
-		for(var i=0; i<locations.length; i++){
-			var index = locations[i].title.toLowerCase().search(query);
-			//if query is found in array, push that location to listView and set map
-			if(index != -1){
-				self.listView.push(locations[i]);
-				self.markers[i].marker.setMap(map);
-			}
-		}
-	};
+    	else {
+    		//Set markers with title that starts with filter to map, others to null
+    		self.markers.forEach(function(markerToSet){
+				if(stringStartsWith(markerToSet.title.toLowerCase(), filter)){
+					markerToSet.marker.setMap(map);
+				}
+				else{
+					markerToSet.marker.setMap(null);
+				}
+			});
+			//Return the items that start with the filter
+        	return ko.utils.arrayFilter(this.items(), function(item) {
+            	return stringStartsWith(item.title.toLowerCase(), filter);
+        	});
+    	}
+	}, this);
 
 };
 
@@ -93,9 +108,9 @@ var populateInfoWindow = function(marker, infowindow, markers) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
     	//Set all marker animations to null, then set marker animation to bounce to alert user marker is selected
-    	for(var c=0;c<markers.length;c++){
-    		markers[c].marker.setAnimation(null);
-    	}
+    	markers.forEach(function(markers){
+    		markers.marker.setAnimation(null);
+    	});
     	marker.setAnimation(google.maps.Animation.BOUNCE);
     	//Set max width of info window
     	infowindow.setOptions({maxWidth:250});
@@ -195,7 +210,7 @@ var populateInfoWindow = function(marker, infowindow, markers) {
 			//If error, alert user
 			.fail(function(){
 				alert('Foursquare API could not be loaded');
-			})
+			});
 		})
 			//If error, alert user
 		.fail(function(){
@@ -203,7 +218,7 @@ var populateInfoWindow = function(marker, infowindow, markers) {
 		})
 		//Open the window on the marker
 		.always(function(){
-			infowindow.open(map, marker)
+			infowindow.open(map, marker);
 		});
 	}
 };

@@ -12,8 +12,7 @@
           Great Destinations in Montreal
         </div>
         <div class=search-bar>
-      		<input id="filter-results-text" class="text" type="text" placeholder="Ex: La Banquise">
-      		<input data-bind="click: filterPlaces" id="filter-results" type="button" value="Filter">
+      		<input id="filter-results-text" data-bind="value: filter, valueUpdate: 'afterkeydown'" class="text" type="text" placeholder="Type here to filter locations">
         </div>
     		<div class="list-results">
     			<ul id="list" data-bind="foreach: listView">

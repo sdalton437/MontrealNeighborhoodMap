@@ -36,13 +36,10 @@ input {
 
 .text{
 	font-size: 12;
-  max-width: 69%;
-  margin-left: 10px;
+  max-width: 85%;
   height:25px;
 }
-.center{
-  margin:auto;
-}
+
 #listItem{
   border: 1px solid #ddd;
   margin-top: -1px; /* Prevent double borders */
@@ -58,17 +55,12 @@ input {
  cursor: pointer;
  background-color: #eee;
 }
-#filter-results{
-  margin-left: 10px;
-  width: 60px;
-  height:25px;
-}
+
 #filter-results-text{
   height:20px;
+  width:100%;
 }
-#filter-results:hover {
- cursor: pointer;
-}
+
 #list{
   list-style-type: none;
   padding: 0;
@@ -77,6 +69,7 @@ input {
 .search-bar{
   margin-top: 10px;
   margin-bottom: 15px;
+  text-align: center;
 }
 .title{
   margin-top: 10px;
