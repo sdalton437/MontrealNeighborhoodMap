@@ -45,8 +45,9 @@ var ViewModel = function(){
 
 	function addListeners(markerToListen){
 		markerToListen.addListener('click', function() {
-        		populateInfoWindow(this, largeInfowindow, self.markers);
+        	populateInfoWindow(this, largeInfowindow, self.markers);
         });
+
 	}
 
 	self.markers.forEach(function(markers){
@@ -67,13 +68,6 @@ var ViewModel = function(){
 
 	this.listView = ko.computed(function() {
     	var filter = self.filter().toLowerCase();
-    	var stringStartsWith = function (string, startsWith) {
-   			string = string || "";
-    		if (startsWith.length > string.length){
-        		return false;
-    		}
-    		return string.substring(0, startsWith.length) === startsWith;
-		};
 		//If no filter, set all markers to map and return all items
     	if (!filter) {
     		self.markers.forEach(function(markerToSet){
@@ -83,18 +77,18 @@ var ViewModel = function(){
     	}
 
     	else {
-    		//Set markers with title that starts with filter to map, others to null
+    		//Set markers with title that container filter to map, others to null
     		self.markers.forEach(function(markerToSet){
-				if(stringStartsWith(markerToSet.title.toLowerCase(), filter)){
+				if(markerToSet.title.toLowerCase().includes(filter)){
 					markerToSet.marker.setMap(map);
 				}
 				else{
 					markerToSet.marker.setMap(null);
 				}
 			});
-			//Return the items that start with the filter
+			//Return the items that contain the filter
         	return ko.utils.arrayFilter(this.items(), function(item) {
-            	return stringStartsWith(item.title.toLowerCase(), filter);
+            	return item.title.toLowerCase().includes(filter);
         	});
     	}
 	}, this);
